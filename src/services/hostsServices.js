@@ -6,12 +6,8 @@ export default class HostServices{
 
     async getCards() {
         try {
-            let response = await api.get(`api/hosts/get_cards/`,);      
-
-            if (response.data.lengh === 0){
-                return false
-            }
-            return response.data
+            let response = await api.get(`api/hosts/get_cards/`,);        
+            return response
         } 
         catch(error) {
             return false
@@ -20,29 +16,21 @@ export default class HostServices{
 
     async getGraphs() {
         try {
-            let response = await api.get(`api/hosts/get_graphics/`);      
-        
-            if (response.data.lengh === 0){
-                return []
-            }
-            return response.data
+            let response = await api.get(`api/hosts/get_graphics/`);         
+            return response
         }
         catch(error) {
-            return []
+            return false
         }
     }
 
     async getTopTen() {
         try {
             let response = await api.get(`api/hosts/get_top_ten/`);      
-        
-            if (response.data.lengh === 0){
-                return []
-            }
-            return response.data
+            return response
         }
         catch(error) {
-            return []
+            return false
         }
     }
 
@@ -50,10 +38,6 @@ export default class HostServices{
     async listHost(){
         try {
             let response = await api.get('api/hosts/list_hosts_per_row/')
-
-            if (response.data.lengh === 0){
-                return []
-            }
             return response
         }
         catch(error){
@@ -68,11 +52,7 @@ export default class HostServices{
                     vulnerabilityTitle: vulnerabilityTitle
                 }});
             
-            if (response.data.lengh === 0 ) {
-                return false
-            }
-            
-            return response.data
+            return response
         }
         catch(error){
             return false
@@ -82,14 +62,8 @@ export default class HostServices{
 
     async importCSV(payload){
         try {
-            let response = await api.post(`api/hosts/import_csv_file/`, payload);
-        
-            if (response.status === 200 || response.status === 201) {
-                return true
-            }
-            else {
-                return false
-            }
+            await api.post(`api/hosts/import_csv_file/`, payload);
+            return true
         }
         catch(error){
             return false
@@ -99,13 +73,7 @@ export default class HostServices{
     async listFilesCSV(){
         try {
             let response = await api.get(`api/hosts/get_all_files/`);
-        
-            if (response.data.lengh === 0) {
-                return false
-            }
-            else {
-                return response.data
-            }
+            return response
         }
         catch(error){
             return false

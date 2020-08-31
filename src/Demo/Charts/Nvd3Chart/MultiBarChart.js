@@ -24,42 +24,56 @@ class MultiBarChart extends React.Component {
 
         if ( response != false ) {
 
-            let list_vulne = [ 
-                response.severitylow.length, 
-                response.severityMedium.length, 
-                response.severityHigh.length, 
-                response.severityCritical.length
-            ]
+            if (( response.status == 200 || response.status == 201 ) && response.data.loaded == true){
 
-            let lengthMin = Math.min( ...list_vulne );
+                if ( response.data.length === 0) {
+                    this.setState({data: []})
+                    return
+                }
 
-            for (let i = 0; i < response.severitylow.length; i++) {
-                baixa.push({
-                    'x': response.severitylow[i].title,
-                    'y': response.severitylow[i].cvss
-                });
+                let severitylow = response.data.severitylow;
+                let severityMedium = response.data.severityMedium;
+                let severityHigh = response.data.severityHigh;
+                let severityCritical = response.data.severityCritical;
+
+                let list_vulne = [ 
+                    severitylow.length, 
+                    severityMedium.length, 
+                    severityHigh.length, 
+                    severityCritical.length
+                ]
+    
+                let lengthMin = Math.min( ...list_vulne );
+    
+                for (let i = 0; i < severitylow.length; i++) {
+                    baixa.push({
+                        'x': severitylow[i].title,
+                        'y': severitylow[i].cvss
+                    });
+                }
+                
+                for (let i = 0; i < severityMedium.length; i++) {
+                    media.push({
+                        'x': severityMedium[i].title,
+                        'y': severityMedium[i].cvss
+                    });
+                }
+    
+                for (let i = 0; i < severityHigh.length; i++) {
+                    alta.push({
+                        'x': severityHigh[i].title,
+                        'y': severityHigh[i].cvss
+                    });
+                }
+    
+                for (let i = 0; i < severityCritical.length; i++) {
+                    critico.push({
+                        'x': severityCritical[i].title,
+                        'y': severityCritical[i].cvss
+                    });
+                }
             }
             
-            for (let i = 0; i < response.severityMedium.length; i++) {
-                media.push({
-                    'x': response.severityMedium[i].title,
-                    'y': response.severityMedium[i].cvss
-                });
-            }
-
-            for (let i = 0; i < response.severityHigh.length; i++) {
-                alta.push({
-                    'x': response.severityHigh[i].title,
-                    'y': response.severityHigh[i].cvss
-                });
-            }
-
-            for (let i = 0; i < response.severityCritical.length; i++) {
-                critico.push({
-                    'x': response.severityCritical[i].title,
-                    'y': response.severityCritical[i].cvss
-                });
-            }
         }
 
         this.setState({

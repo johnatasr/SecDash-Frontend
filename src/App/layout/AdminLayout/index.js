@@ -20,8 +20,8 @@ class AdminLayout extends Component {
     constructor() {
         super();
         this.state = {
-            searchTitle: '',
-            searchList: [],
+            searchTitle: '',     
+            searchList: []
         }
         this.handleTitle = this.handleTitle.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
@@ -52,16 +52,16 @@ class AdminLayout extends Component {
         try {
 
             if ( this.state.searchTitle === '' ||  this.state.searchTitle === undefined ) {
-                this.setState({ searchList: [] })
+                this.setState({ searchList: []})
                 return
             }
 
             let response = await hostServices.filterHosts(this.state.searchTitle);
 
             if ( response != false ) {
-                this.setState({
-                    searchList: response.hostsList,
-                })
+
+                if ( (response.status ===  200 || response.status === 201) && response.data.loaded == true ) 
+                    this.setState({searchList: response.data.hostsList})
         
             } else {
                 this.setState({
@@ -77,7 +77,7 @@ class AdminLayout extends Component {
     }
 
     handleTitle(e) {
-        this.setState({searchTitle: e.target.value})
+        this.setState({searchTitle: e.target.value,})
     }
 
     render() {

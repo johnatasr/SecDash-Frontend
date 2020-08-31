@@ -4,7 +4,8 @@ import {NavLink} from 'react-router-dom';
 import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
 import Breadcrumb from "../../../App/layout/AdminLayout/Breadcrumb";
-import axios from 'axios'
+// import axios from 'axios'
+import api from '../../../services/api'
 
 class SignUp1 extends React.Component {
     constructor () {
@@ -41,7 +42,7 @@ class SignUp1 extends React.Component {
         }
 
         try {
-            const response = await axios.post("http://192.168.0.47:8000/core/user/create/", payload);
+            const response = await api.post("users/user/create/", payload);
 
             if (response.status === 401) {
                 this.setState({ 
@@ -63,7 +64,7 @@ class SignUp1 extends React.Component {
         } catch (err) {
             this.setState({ 
                 error: true, 
-                msgError: 'Login não efetuado, verifique os campos' 
+                msgError: 'Cadastro não efetuado, verifique os campos' 
             });
         }
     };

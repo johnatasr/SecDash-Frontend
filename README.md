@@ -12,6 +12,7 @@ e acuracidade.
 
 ## Como rodar o projeto ?
 
+* Acesse o repositório do projeto principal em : https://github.com/johnatasr/SecDash
 * Clone o projeto
 * `cd djsrc/` e inicialize o ambiente virtual. 
 ```

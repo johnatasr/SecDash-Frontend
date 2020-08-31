@@ -2,7 +2,7 @@ import React from 'react';
 import {NavLink} from 'react-router-dom';
 
 import api from '../../../services/api'
-import axios from 'axios'
+// import axios from 'axios'
 
 import './../../../assets/scss/style.scss';
 import Aux from "../../../hoc/_Aux";
@@ -44,7 +44,7 @@ class SignUp1 extends React.Component {
 
 
         try {
-            const response = await axios.post("http://192.168.0.47:8000/users/token/obtain/", payload);
+            const response = await api.post("users/token/obtain/", payload);
 
             if (response.status === 401) {
                 this.setState({ 

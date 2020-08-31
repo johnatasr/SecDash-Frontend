@@ -4,6 +4,7 @@ import {Dropdown} from 'react-bootstrap';
 import windowSize from 'react-window-size';
 
 import ModalFile from '../../../../../Demo/ModalFile'
+import HostServices from '../../../../../services/hostsServices'
 
 import NavSearch from './NavSearch';
 import Aux from "../../../../../hoc/_Aux";
@@ -19,7 +20,10 @@ class NavLeft extends Component {
         }
     }
 
+    handleGetFilesList
+    
 
+    
     render() {
         let iconFullScreen = ['feather'];
         iconFullScreen = (this.props.isFullScreen) ? [...iconFullScreen, 'icon-minimize'] : [...iconFullScreen, 'icon-maximize'];

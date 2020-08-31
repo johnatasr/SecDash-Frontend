@@ -28,14 +28,23 @@ class Dashboard extends React.Component {
             let response = await hostServices.getCards();
             
             if ( response != false ) {
-                this.setState({
-                    totalHosts: response.totalHosts,
-                    totalHostsVulne: response.totalHostsVulne,
-                    totalVulne: response.totalVulnerabilities,
-                    notCorrectedVulne: response.notCorrected,
-                    severity: response.severity,
-                    mediaCVSS: response.mediaCVSS
-                })
+
+                if ( (response.status == 200 ||  response.status == 201) && response.data.loaded == true ) {
+                    this.setState({
+                        totalHosts: response.data.totalHosts,
+                        totalHostsVulne: response.data.totalHostsVulne,
+                        totalVulne: response.data.totalVulnerabilities,
+                        notCorrectedVulne: response.data.notCorrected,
+                        severity: response.data.severity,
+                        mediaCVSS: response.data.mediaCVSS
+                    })
+                }
+
+                else if ( response.status == 401 ) {
+                    localStorage.clear(); 
+                    this.props.history.push('/');
+                }
+                
             } else {
                 localStorage.clear(); 
                 this.props.history.push('/');

@@ -29,8 +29,13 @@ export default class ModalCompFiles extends Component {
 
     async handleUpload(){
         try {
-
             const hostServices = new HostServices();
+
+            this.setState({
+                msg: 'Carregando ... ',
+                msgColor: '#04a9f5'
+            })
+
 
             let file = this.state.file
 
@@ -39,14 +44,15 @@ export default class ModalCompFiles extends Component {
         
             let response = await hostServices.importCSV(formdata);
 
-            if (response === true) {
+        
+            if (response == true) {
                 this.setState({
                     msg: 'Arquivo salvo com sucesso !',
                     msgColor: '#04a9f5'
                 })
             } else {
                 this.setState({
-                    msg: 'Arquivo não salvo !',
+                    msg: 'Arquivo não salvo',
                     msgColor: '#f50404'
                 })
             }
@@ -54,16 +60,14 @@ export default class ModalCompFiles extends Component {
         }
         catch (error) {
             this.setState({
-                msg: 'Arquivo não salvo !',
+                msg: 'Falha ao importar, verifique se o arquivo CSV está nos padrões para importação',
                 msgColor: '#f50404'
             })
         }
     }
 
-    async componentDidMount(){
+    async getAllfiles(){
         const hostServices = new HostServices();
-
-        if ( this.state.loaded != true ) {
             try {
                 this.setState({
                     alert: true,
@@ -73,13 +77,25 @@ export default class ModalCompFiles extends Component {
                 let response = await hostServices.listFilesCSV();
     
                 if ( response != false ) {
-                    this.setState({
-                        alert: false,
-                        msgAlert: '',
-                        filesList: response,
-                        loaded: true
-                    })
-            
+
+                    if ( response.data.loaded == true ) {
+                        this.setState({
+                            alert: false,
+                            msgAlert: '',
+                            filesList: response.data,
+                            loaded: true
+                        })
+                    }
+                    else {
+                        this.setState({
+                            alert: true,
+                            msgAlert: 'Nehum registro encontrado',
+                            filesList: [],
+                            loaded: true
+                        })
+                    }
+
+
                 } else {
                     this.setState({
                         loaded: true,
@@ -93,10 +109,16 @@ export default class ModalCompFiles extends Component {
                     msgAlert: "Não foi possível carregar"
                 })
             }
-        }
-    }
+        } 
         
     render() {
+
+        // if ( this.props.show === true ){
+        //     this.getAllfiles()
+        // }
+
+
+
         return (
             <>
               <Modal

@@ -19,19 +19,23 @@ class ChartTopTen extends React.Component {
 
         if ( response != false ) {
 
-            for (let i = 0; i < response.topTen.length; i++) {
-                topTen.push({
-                    'x': response.topTen[i].hostname,
-                    'y': response.topTen[i].cvssTotal
-                });
-            }
+            if ( (response.status == 200 ||  response.status == 201) && response.data.loaded == true ){
+                for (let i = 0; i < response.data.topTen.length; i++) {
+                    topTen.push({
+                        'x': response.data.topTen[i].hostname,
+                        'y': response.data.topTen[i].cvssTotal
+                    });
+                }
+
+                this.setState({
+                    data: [
+                        { values: topTen }
+                    ]
+                }) 
+            } 
         }
 
-        this.setState({
-            data: [
-                { values: topTen }
-            ]
-        }) 
+        
     }
     
     render() {

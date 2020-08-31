@@ -27,18 +27,27 @@ class BootstrapTable extends React.Component {
             let response = await hostServices.listHost();
 
             if ( response != false ) {
-                this.setState({
-                    loading: false,
-                    listHosts: response.data.hostsList,
-                })
 
-                let lengthRows = response.data.hostsList.length;
-
-                this.setState({tableLenght: lengthRows})
+                if ( (response.status == 200 || response.status == 201) && response.data.loaded == true ) {
+                    this.setState({
+                        loading: false,
+                        listHosts: response.data.hostsList,
+                    })
+    
+                    let lengthRows = response.data.hostsList.length;
+    
+                    this.setState({tableLenght: lengthRows})
+                }
+                
+                else {
+                    this.setState({msg: 'Não foi possível carregar tabela', loading: true})
+                }
             }
         }
         catch(error){
-            this.setState({msg: 'Não foi possível carregar tabela'})
+            this.setState({msg: 'Não foi possível carregar tabela', loading: true})
+            localStorage.clear()
+            this.props.history.push('/');
         }
 
     }
@@ -54,9 +63,15 @@ class BootstrapTable extends React.Component {
     render() {
     
         let items = [];
+        let currentRows = [];
+
         const indexOfLastRows = parseInt(this.state.page) * this.state.rowPerpage;
         const indexOfFirstRows = indexOfLastRows - this.state.rowPerpage;
-        const currentRows = this.state.listHosts.slice(indexOfFirstRows, indexOfLastRows);
+
+        if (this.state.listHosts.length != 0 ) {
+            currentRows = this.state.listHosts.slice(indexOfFirstRows, indexOfLastRows);
+        }
+       
 
         for (let number = 1; number <= Math.ceil(this.state.tableLenght / this.state.rowPerpage); number++) {
             items.push(
@@ -78,7 +93,7 @@ class BootstrapTable extends React.Component {
 
                                 { this.state.loading ? 
                                     <div className='row align-items-center justify-content-center' ><h3>{this.state.msg}</h3></div>
-                                    :  this.props.searchList.length === 0 ?
+                                    :  this.props.searchList.length === 0  ?
                                         <Table responsive hover>
                                             <thead>
                                                 <tr>
@@ -106,34 +121,33 @@ class BootstrapTable extends React.Component {
                                             </tbody>
                                         </Table>
                                     :  
-
-                                    <Table responsive hover>
-                                        <thead>
-                                            <tr>
-                                                <th>Hostname</th>
-                                                <th>Endereço IP</th>
-                                                <th>Vulnerabilidade</th>
-                                                <th>Severidade</th>
-                                                <th>CVSS</th>
-                                                <th>Data Publicação</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            { this.props.searchList.map((item, index) => (
+                                        <Table responsive hover>
+                                            <thead>
+                                                <tr>
+                                                    <th>Hostname</th>
+                                                    <th>Endereço IP</th>
+                                                    <th>Vulnerabilidade</th>
+                                                    <th>Severidade</th>
+                                                    <th>CVSS</th>
+                                                    <th>Data Publicação</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                { this.props.searchList.map((item, index) => (
+                                                                
+                                                        <tr key={index}>
+                                                            <th scope="row">{item.hostname}</th>
+                                                            <td>{item.ip_adress}</td>
+                                                            <td>{item.title}</td>
+                                                            <td>{item.severity}</td>
+                                                            <td>{item.cvss}</td> 
+                                                            <td>{item.publication_date}</td> 
+                                                        </tr>                             
                                                             
-                                                    <tr key={index}>
-                                                        <th scope="row">{item.hostname}</th>
-                                                        <td>{item.ip_adress}</td>
-                                                        <td>{item.title}</td>
-                                                        <td>{item.severity}</td>
-                                                        <td>{item.cvss}</td> 
-                                                        <td>{item.publication_date}</td> 
-                                                    </tr>                             
-                                                        
-                                                ))}
-                                        </tbody>
-                                    </Table>      
-                                }     
+                                                    ))}
+                                            </tbody>
+                                        </Table>      
+                                }
                             </Card.Body>
                         </Card>
 
@@ -153,4 +167,6 @@ class BootstrapTable extends React.Component {
     }
 }
 
-export default BootstrapTable;
+
+
+export default BootstrapTable
