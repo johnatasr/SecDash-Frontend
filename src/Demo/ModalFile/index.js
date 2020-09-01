@@ -9,9 +9,6 @@ export default class ModalCompFiles extends Component {
     constructor(){
         super();
         this.state = {
-            filesList: [],
-            alert: false,
-            msgAlert: '',
             loaded: false,
             file: null,
             msg: 'Formatos de arquivo aceito: csv',
@@ -42,20 +39,13 @@ export default class ModalCompFiles extends Component {
             const formdata = new FormData();
             formdata.append('file', file)
         
-            let response = await hostServices.importCSV(formdata);
+            await hostServices.importCSV(formdata);
 
-        
-            if (response == true) {
-                this.setState({
-                    msg: 'Arquivo salvo com sucesso !',
-                    msgColor: '#04a9f5'
-                })
-            } else {
-                this.setState({
-                    msg: 'Arquivo não salvo',
-                    msgColor: '#f50404'
-                })
-            }
+            this.setState({
+                msg: 'Arquivo salvo com sucesso, recarregue a página para obter todas informações',
+                msgColor: '#04a9f5'
+            })
+          
 
         }
         catch (error) {
@@ -65,60 +55,8 @@ export default class ModalCompFiles extends Component {
             })
         }
     }
-
-    async getAllfiles(){
-        const hostServices = new HostServices();
-            try {
-                this.setState({
-                    alert: true,
-                    msgAlert: 'Carregando ...',
-                })
-                
-                let response = await hostServices.listFilesCSV();
-    
-                if ( response != false ) {
-
-                    if ( response.data.loaded == true ) {
-                        this.setState({
-                            alert: false,
-                            msgAlert: '',
-                            filesList: response.data,
-                            loaded: true
-                        })
-                    }
-                    else {
-                        this.setState({
-                            alert: true,
-                            msgAlert: 'Nehum registro encontrado',
-                            filesList: [],
-                            loaded: true
-                        })
-                    }
-
-
-                } else {
-                    this.setState({
-                        loaded: true,
-                        msgAlert: "Não foi possível carregar"
-                    })
-                }     
-            }
-            catch (error) {
-                this.setState({
-                    loaded: true,
-                    msgAlert: "Não foi possível carregar"
-                })
-            }
-        } 
         
     render() {
-
-        // if ( this.props.show === true ){
-        //     this.getAllfiles()
-        // }
-
-
-
         return (
             <>
               <Modal
@@ -133,8 +71,8 @@ export default class ModalCompFiles extends Component {
                       </Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
-                      <div className="row" style={{marginTop: 0}}>
-                          <div className="col-xs-5" style={{marginRight: 5, height: 320, marginLeft: 15}}>
+                      <div className="row" style={{marginTop: 0,}}>
+                          <div className="col-xs-5" style={{marginRight: 5, height: 320, marginLeft: 200}}>
                               <h4 className="modal-title"
                                   style={{color: 'black', textAlign: 'center', fontSize: 18, marginBottom: 5, paddingBottom: 5}}>
                                   Enviar novo arquivo
@@ -164,93 +102,18 @@ export default class ModalCompFiles extends Component {
                                   <div className="col-xs-6">
                                       <a
                                           href="">
-                                          <button type="button" className="btn btn-success"
-                                              style={{border: null, marginTop: 10, width: '80%', marginLeft: 30}}>Baixar
+                                          <button type="button" href="/static/media/file_model/asset_vulnerability.csv" className="btn btn-success"
+                                            style={{border: null, marginTop: 10, width: '80%', marginLeft: 30}}>Baixar
                                               modelo</button>
                                       </a>
                                   </div>
                               </div>
-                          </div> 
-                          
-                          <div className="col-xs-4" style={{width: '45%', height: 320, overflowY: 'scroll'}}>
-                              <div className="row">
-                                  <h4 className="modal-title"
-                                      style={{color: 'black', textAlign: 'center', fontSize: 18, marginBottom: 5, paddingBottom: 5, marginLeft: 25}}>
-                                      Histórico de importações
-                                  </h4>
+                              <div className="row" styles={{marginLeft: 10}}>
+                                <small style={{fontSize: 12, marginLeft: 1, color: "black"}}>
+                                    Acompanhe o histórico de importações pelo Admin do portal.
+                                </small>
                               </div>
-                              
-                              {
-                                  this.state.alert ?
-                                      <div className="row"><h3>{this.state.msgAlert}</h3></div>
-                                      :
-                                      this.state.filesList.map((item, index) => {
-                                          return (
-                                              <>
-                                                  <div className="row" style={{marginLeft: 20}}>
-                                                      <h4 style={{color: 'black', marginBottom: 8,}}>
-                                                          Nome arquivo: {item.title}
-                                                      </h4>
-                                                  </div>
-                                                  <div className="row">
-                                                      <div className="col" style={{marginLeft: 20}}>
-                                                          <small style={{color: 'black', fontSize: 15, fontWeight: 'bold'}}>
-                                                              Data de envio: 
-                                                          </small>
-                                                      </div>
-                                                      <div className="col">
-                                                          <small style={{fontSize: 15}} id="updateColorSmall">
-                                                              {item.date}
-                                                          </small>
-                                                      </div>
-                                                  </div>
-                                                  <div className="row" style={{marginLeft: 20}}>    
-                                                      <small style={{color: 'black', fontSize: 15, fontWeight: 'bold'}}>                                                         
-                                                          Status de envio:         
-                                                      </small>
-      
-                                                      { item.staus === 'E' ?
-                                                          <small style={{fontSize: 15, marginLeft: 10}}>
-                                                              Erro - Arquivo fora do padrão!
-                                                          </small> 
-                                                          : item.status === 'R' ?
-                                                              <small style={{fontSize: 15, marginLeft: 10}}>
-                                                                  Em processamento!
-                                                              </small> 
-                                                              : item.status === 'F' ?
-                                                                  <small style={{fontSize: 15, marginLeft: 10}}>
-                                                                      Concluído com sucesso!
-                                                                  </small>
-                                                                  :
-                                                                  <div></div> 
-                                                      }      
-                                                  </div>
-      
-                                                  <div className="row" style={{marginLeft: 20, marginBottom: 20}}>
-                                                      <small style={{color: 'black', fontSize: 15, fontWeight: 'bold'}}>
-                                                          Exceções:
-                                                      </small>
-      
-                                                      {
-                                                          item.exceptions_file != null || item.exceptions_file != undefined ?
-                                                              <a href="">
-                                                                  <small style={{fontSize: 15, marginTop: 10, marginLeft: 5}}>
-                                                                      <i className="fa fa-download"></i>
-                                                                          Baixar arquivo com exceções
-                                                                  </small >
-                                                              </a>
-                                                              :
-                                                              <small style={{fontSize: 15, marginLeft: 5, color: '#e32620'}}>
-                                                                  Não possui arquivo de exceções
-                                                              </small> 
-                                                      }
-                                                  </div>   
-                                              </>
-                                          )}
-                                      ) 
-                                     
-                              }
-                          </div>
+                          </div> 
                       </div>
                   </Modal.Body>
                   <Modal.Footer>

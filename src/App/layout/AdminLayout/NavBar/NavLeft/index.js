@@ -19,10 +19,6 @@ class NavLeft extends Component {
             showModalImportFile: false,
         }
     }
-
-    handleGetFilesList
-    
-
     
     render() {
         let iconFullScreen = ['feather'];
@@ -43,7 +39,7 @@ class NavLeft extends Component {
                 <ModalFile 
                     show={this.state.showModalImportFile}
                     onHide={() => this.setState({showModalImportFile: false})}
-                    dialogClassName="modal-100w"
+                    dialogClassName="modal-50w"
                 />
 
                 <ul className="navbar-nav mr-auto">
